@@ -2435,6 +2435,7 @@ void amf_n2::handle_itti_message(
   unc->target_ran_ue_ngap_id = 0;               // Clear target RAN ID
   unc->ng_ue_state           = NGAP_UE_CONNECTED;
   unc->gnb_assoc_id          = itti_msg->assoc_id;  // update serving gNB
+  unc->tai                   = tai;
   set_ran_ue_ngap_id_2_ue_ngap_context(ran_ue_ngap_id, gc->gnb_id, unc);
 
   // update NAS Context
@@ -2445,6 +2446,8 @@ void amf_n2::handle_itti_message(
   auto old_gnb       = uc->gnb_id;
   uc->ran_ue_ngap_id = ran_ue_ngap_id;
   uc->gnb_id         = gc->gnb_id;
+  uc->cgi            = cgi;
+  uc->tai            = tai;
 
   // Remove the old mapping and add the new mapping for the UE context
   amf_app_inst->unbind_ran_gnb(old_ran, old_gnb);
