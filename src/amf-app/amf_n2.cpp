@@ -2455,6 +2455,21 @@ void amf_n2::handle_itti_message(
 
   amf_app_inst->set_ue_context(amf_ue_ngap_id, uc);
 
+  // Update statistics
+  ue_info_t ue_item;
+  ue_item.cm_status       = nc->nas_status;
+  ue_item.register_status = nc->_5gmm_state;
+  ue_item.ranid           = ran_ue_ngap_id;
+  ue_item.amfid           = amf_ue_ngap_id;
+  ue_item.imsi            = nc->imsi;
+  ue_item.supi            = nc->supi;
+  if (nc->guti.has_value()) ue_item.guti = nc->guti.value();
+  ue_item.mcc    = uc->cgi.mcc;
+  ue_item.mnc    = uc->cgi.mnc;
+  ue_item.cellId = uc->cgi.nrCellId;
+
+  stacs.update_ue_info(ue_item);
+
   // Retrieve new location from the UE and notify generate location change
   // signal
   UserLocation user_location = {};
